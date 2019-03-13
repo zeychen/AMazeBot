@@ -21,19 +21,19 @@ h2 {
 
 </style>
 <div id="area1">
-	<h2>AMaze</h2>
-	<canvas id="GameBoardCanvas" width="400px" height="400px">
+    <h2>AMaze</h2>
+    <canvas id="Maze" width="400px" height="400px">
 </canvas>
 </div>
 <div id="div1"></div>
 <script src="jquery.js"></script>
 <script>
 
-var canvas = $('#GameBoardCanvas');
+var canvas = $('#Maze');
 
 //The game board 1 = walls, 0 = free space, and -1 = the goal
 var board = [
-	[ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     [ 1,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
     [ 1,  1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1],
     [ 1,  1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1],
@@ -84,9 +84,9 @@ function draw(angry){
     ctx.beginPath();
     var half = blockSize/2;
     if(angry == 1)
-    	ctx.fillStyle = "red";
+        ctx.fillStyle = "red";
     else if(angry == 0)
-    	ctx.fillStyle = "blue";
+        ctx.fillStyle = "blue";
     ctx.arc(player.x*blockSize+half, player.y*blockSize+half, half, 0, 2*Math.PI);
     ctx.fill();
 }
@@ -100,25 +100,25 @@ function canMove(x, y){
 
 draw(0);
 
-var moves = [4,4,4,4,4,4,4,4,4,2,2,2,2,2,2,2];
+var moves = [4,4,4,4,4,4,4,4,4,2,2,2,2,2,2,2,5,3,5,3];
 var i;
 for(i=0; i < moves.length; i++){
-	
-	(function(i){
+    
+    (function(i){
     window.setTimeout(function(){
-    	if(moves[i] == 1 && canMove(player.x, player.y-1)){ // up
-			player.y--;
-		}
-		else if( moves[i] == 2 && canMove(player.x, player.y+1)){ //down
-			player.y++;
-		}
-		else if( moves[i] == 3 && canMove(player.x-1, player.y)){ //left
-			player.x--;
-		}
-		else if( moves[i] == 4 && canMove(player.x+1, player.y)){ //right
-			player.x++;
-		}
-		draw(0);
+        if(moves[i] == 1 && canMove(player.x, player.y-1)){ // up
+            player.y--;
+        }
+        else if( moves[i] == 2 && canMove(player.x, player.y+1)){ //down
+            player.y++;
+        }
+        else if( moves[i] == 3 && canMove(player.x-1, player.y)){ //left
+            player.x--;
+        }
+        else if( moves[i] == 4 && canMove(player.x+1, player.y)){ //right
+            player.x++;
+        }
+        draw(0);
     }, i * 500);
   }(i));
 }
