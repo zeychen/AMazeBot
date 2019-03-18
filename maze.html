@@ -62,9 +62,19 @@ var dx=5;
 var dy=5;
 var x, y, initialx, initialy;
 var totalAnger = 0;
+var moveIndex = 0;
+
+//Moves with no anger but reaches the goal
+//var moves = [4,4,4,4,4,4,4,4,4,2,2,2,2,2,2,2,3,3,1,1,1,1,1,3,3,3,3,2,3,3,3,2,2,4,2,2,2,2,3];
+
+//Moves with some angry (color and shake)
+//var moves = [4,4,4,4,4,4,5,4,4,4,2,2,2,5,2,2,2,2,3,5,3,1,1,1,1,5,1,3,3,3,3,5,2,3,3,3,2,2,4,2,2,2,2,3];
+
+//Moves with a lot of anger (color, shake and then bounce)
+var moves = [4,4,4,4,4,4,5,4,4,4,2,2,5,2,5,2,2,2,2,3,5,3,1,1,1,1,5,1,3,3,3,3,5,2,3,3,3,5,5,2,2,4,2,5,5,2,2,2,3];
 
 //Draw the game board
-function draw(angry, shake, bounce){
+function draw(){
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.clearRect(0, 0, width, width);
     ctx.fillStyle="white";
@@ -88,22 +98,61 @@ function draw(angry, shake, bounce){
             }
         }
     }
-    if(totalAnger > 4 && totalAnger <=7)
-        shakeBall();
+    console.log("totalAnger is :", totalAnger);
+    if(totalAnger <= 4)
+        drawNormalPlayer();
+    else if(totalAnger > 4 && totalAnger <=7)
+        drawLittleShakyPlayer();
     else if(totalAnger > 7){
-        bounceBall(3);
+        console.log("here");
+        drawMoreShakyPlayer(3);
         dx=5;
         dy=5
     }
-    else
-        drawNormalPlayer();
 }
 
 function getColor(){
     var colors = ["#FFCCCC","#FF9999", "#FF6666", "#FF3333", "#FF0000"];
     if(totalAnger>4)
-        totalAnger = 4;
-    return colors[totalAnger];
+        return colors[4];
+    else
+        return colors[totalAnger];
+}
+
+function drawLittleShakyPlayer(){
+    //console.log("Shaking")
+    var width = canvas.width();
+    var blockSize = width/board.length;
+    var half = blockSize/4;
+    requestAnimationFrame(drawLittleShakyPlayer);
+    ctx2.clearRect(player.x*blockSize+half, player.y*blockSize+half,half*2+8, half*2+8);
+    ctx2.save();
+    var dx = Math.random()*2;
+    var dy = Math.random()*2;
+    ctx2.translate(dx, dy);  
+    ctx2.fillStyle = '#F00';
+    ctx2.beginPath();
+    ctx2.arc(player.x*blockSize+half+half, player.y*blockSize+half+half, half, 0, 2*Math.PI);
+    ctx2.fill();
+    ctx2.restore();
+}
+
+function drawMoreShakyPlayer(){
+    //console.log("Shaking")
+    var width = canvas.width();
+    var blockSize = width/board.length;
+    var half = blockSize/4;
+    requestAnimationFrame(drawMoreShakyPlayer);
+    ctx2.clearRect(player.x*blockSize+half, player.y*blockSize+half,half*2+8, half*2+8);
+    ctx2.save();
+    var dx = Math.random()*5;
+    var dy = Math.random()*5;
+    ctx2.translate(dx, dy);  
+    ctx2.fillStyle = '#F00';
+    ctx2.beginPath();
+    ctx2.arc(player.x*blockSize+half+half, player.y*blockSize+half+half, half, 0, 2*Math.PI);
+    ctx2.fill();
+    ctx2.restore();
 }
 
 function drawNormalPlayer(){
@@ -246,53 +295,51 @@ function canMove(x, y){
 
 
 
-draw(0,0,0);
+draw();
 
-var moves = [4,4,4,4,4,4,4,4,4,2,2,2,2,2,2,2,3,3,1,1,1,1,1,3,3,3,3,2,3,3,3,2,2,4,2,2,2,2,3];
-var i;
-for(i=0; i < moves.length; i++){
+for(moveIndex=0; moveIndex < moves.length; moveIndex++){
     
-    (function(i){
+    (function(moveIndex){
     window.setTimeout(function(){
-        if(moves[i] == 1){ // up
+        if(moves[moveIndex] == 1){ // up
             if(!canMove(player.x, player.y-1))
-                draw(1,1,1);
+                draw();
             else {
                 player.y--;
-                draw(0,0,0);
+                draw();
             }
         }
-        else if( moves[i] == 2){ //down
+        else if( moves[moveIndex] == 2){ //down
             if(!canMove(player.x, player.y+1))
-                draw(1,1,2);
+                draw();
             else {
                 player.y++;
-                draw(0,1,0);
+                draw();
             }
         }
-        else if( moves[i] == 3){ //left
+        else if( moves[moveIndex] == 3){ //left
             if(!canMove(player.x-1, player.y))
-                draw(1,1,3);
+                draw();
             else {
                 player.x--;
-                draw(0,0,0);
+                draw();
             }
         }
-        else if( moves[i] == 4){ //right
+        else if( moves[moveIndex] == 4){ //right
             if(!canMove(player.x+1, player.y))
-                draw(1,1,4);
+                draw();
             else {
                 player.x++;
-                draw(0,0,0);
+                draw();
             }
         }
-        else if (moves[i] == 5){
+        else if (moves[moveIndex] == 5){
             totalAnger+=1;
-            draw(0,0,0);
+            draw();
         }
         
-    }, i * 500);
-  }(i));
+    }, moveIndex * 200);
+  }(moveIndex));
 }
 
 </script>
