@@ -80,13 +80,17 @@ var x, y, initialx, initialy;
 var totalAnger = 0;
 var moveIndex = 0;
 var deadends = 0;
+var shakeMoreID;
+var shakeLittleID;
 
+//Test
+var moves = [2,4,4,2,2,2,2,3,2,2,5,3,2,2,4,3,1,1,4,1,1,4,1,1,1,4,4,4,1,4,4,2,2,2,3,3,3,4,5,4,4,1,1,1,1,4,4,2,1,4,4,
+			2,2,2,2,2,2,2,2,3,2,2,5,4,4,4,2,1,4,4,2,2,2,2,2,4,2,4,2,4,4,2,5,2,2,2,2,4,2,2,1,1,4,4,2,2];
 
-//Random tests
-var moves = [2,4,4,2,5,2,2,2,3,2,5,2,3,2,2,4,5,3,1,1,4,1,1,4,1,1,1,4,4,5,4,1,4,4,2,2,2,1,4,4,4,4,
-			2,2,2,2,2,5,3,2,2,4,4,4,4,4,2,2,2,2,2,4,2,4,2,4,4,2,2,2,2,2,4,2,2,1,1,4,4,2,2
-				];
-
+// more angry path (gets angrier sooner)			
+//var moves = [2,4,4,2,2,2,2,3,2,2,5,3,2,2,4,3,1,1,4,1,1,4,1,1,1,4,4,4,1,4,4,2,2,2,3,3,3,4,5,4,4,1,1,1,1,4,5,4,2,1,4,4,
+//			2,2,2,2,2,2,2,2,3,2,2,5,4,4,4,2,1,4,4,2,2,2,2,2,4,5,2,4,2,4,4,2,5,2,2,2,2,5,4,2,2,1,1,4,4,2,2];
+			
 //Draw the game board
 function draw(){
     ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -117,34 +121,34 @@ function draw(){
             }
         }
     }
-    console.log("totalAnger is :", totalAnger);
-	console.log("deadends is :", deadends);
-    if(totalAnger <= 4)
+    //console.log("totalAnger is :", totalAnger);
+	//console.log("deadends is :", deadends);
+    if(totalAnger <= 6) {
         drawNormalPlayer();
-    else if(totalAnger > 4 && totalAnger <=7)
+		cancelAnimationFrame(shakeLittleID);
+		}
+    else if(totalAnger > 4 && totalAnger < 12)
         drawLittleShakyPlayer();
-    else if(totalAnger > 7){
+    if(deadends){
+		deadends--;
         console.log("here");
-        drawMoreShakyPlayer(3);
+        drawMoreShakyPlayer();
         dx=5;
         dy=5
     }
 }
 
 function getColor(){
-    var colors = ["#FFCCCC","#FF9999", "#FF6666", "#FF3333", "#FF0000"];
-    if(totalAnger>4)
-        return colors[4];
-    else
-        return colors[totalAnger];
+    var colors = ["#FFCCCC", "#FFAAAA","#FFBBBB","#FF9999", "#FF8888","#FF7777","#FF6666", "#FF55555","#FF4444","#FF3333", "#FF2222", "#FF1111", "#FF0000"];
+    return colors[totalAnger];
 }
 
 function drawLittleShakyPlayer(){
-    console.log("drawLittleShakyPlayer")
+    //console.log("drawLittleShakyPlayer")
     var width = canvas.width();
     var blockSize = width/board.length;
     var half = blockSize/4;
-    requestAnimationFrame(drawLittleShakyPlayer);
+    shakeLittleID = requestAnimationFrame(drawLittleShakyPlayer);
     ctx2.clearRect(player.x*blockSize+half-3, player.y*blockSize+half-3,half*2+5, half*2+5);
     ctx2.save();
     var dx = Math.random()*2;
@@ -158,11 +162,11 @@ function drawLittleShakyPlayer(){
 }
 
 function drawMoreShakyPlayer(){
-    console.log("drawMoreShakyPlayer")
+    //console.log("drawMoreShakyPlayer")
     var width = canvas.width();
     var blockSize = width/board.length;
     var half = blockSize/4;
-    requestAnimationFrame(drawMoreShakyPlayer);
+    shakeMoreID = requestAnimationFrame(drawMoreShakyPlayer);
     ctx2.clearRect(player.x*blockSize+half-4, player.y*blockSize+half-4,half*2+8, half*2+8);
     ctx2.save();
     var dx = Math.random()*5;
@@ -173,6 +177,12 @@ function drawMoreShakyPlayer(){
     ctx2.arc(player.x*blockSize+half+half-2, player.y*blockSize+half+half-2, half, 0, 2*Math.PI);
     ctx2.fill();
     ctx2.restore();
+	if (deadends > 0){
+		deadends--;
+	}
+	else{
+		cancelAnimationFrame(shakeMoreID);
+	}
 }
 
 function drawNormalPlayer(){
@@ -342,7 +352,14 @@ for(moveIndex=0; moveIndex < moves.length; moveIndex++){
             draw();
         }
 		if (board[player.y][player.x] === 2){
-			deadends++;
+			deadends = 50;
+			totalAnger++;
+		}
+		if (board[player.y][player.x] === -1){
+			cancelAnimationFrame(shakeLittleID);
+			totalAnger = 0;
+			draw();
+			console.log("END");
 		}
         
     }, moveIndex * 200);
