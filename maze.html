@@ -71,7 +71,10 @@ var moveIndex = 0;
 //var moves = [4,4,4,4,4,4,5,4,4,4,2,2,2,5,2,2,2,2,3,5,3,1,1,1,1,5,1,3,3,3,3,5,2,3,3,3,2,2,4,2,2,2,2,3];
 
 //Moves with a lot of anger (color, shake and then bounce)
-var moves = [4,4,4,4,4,4,5,4,4,4,2,2,5,2,5,2,2,2,2,3,5,3,1,1,1,1,5,1,3,3,3,3,5,2,3,3,3,5,5,2,2,4,2,5,5,2,2,2,3];
+//var moves = [4,4,4,4,4,4,5,4,4,4,2,2,5,2,5,2,2,2,2,3,5,3,1,1,1,1,5,1,3,3,3,3,5,2,3,3,3,5,5,2,2,4,2,5,5,2,2,2,3];
+
+//Random tests
+var moves = [4,5,5,5,5,5,5,4,4,4,4,4,4,4,4,2,2,2,2,2,2,2,3,3,1,1,1,1,5,1,3,3,3,3,5,2,3,3,3,5,5,2,2,4,2,5,5,2,2,2,3];
 
 //Draw the game board
 function draw(){
@@ -120,12 +123,12 @@ function getColor(){
 }
 
 function drawLittleShakyPlayer(){
-    //console.log("Shaking")
+    console.log("drawLittleShakyPlayer")
     var width = canvas.width();
     var blockSize = width/board.length;
     var half = blockSize/4;
     requestAnimationFrame(drawLittleShakyPlayer);
-    ctx2.clearRect(player.x*blockSize+half, player.y*blockSize+half,half*2+8, half*2+8);
+    ctx2.clearRect(player.x*blockSize+half-4, player.y*blockSize+half-4,half*2+10, half*2+10);
     ctx2.save();
     var dx = Math.random()*2;
     var dy = Math.random()*2;
@@ -138,15 +141,15 @@ function drawLittleShakyPlayer(){
 }
 
 function drawMoreShakyPlayer(){
-    //console.log("Shaking")
+    console.log("drawMoreShakyPlayer")
     var width = canvas.width();
     var blockSize = width/board.length;
     var half = blockSize/4;
     requestAnimationFrame(drawMoreShakyPlayer);
-    ctx2.clearRect(player.x*blockSize+half, player.y*blockSize+half,half*2+8, half*2+8);
+    ctx2.clearRect(player.x*blockSize+half-4, player.y*blockSize+half-4,half*2+12, half*2+12);
     ctx2.save();
-    var dx = Math.random()*5;
-    var dy = Math.random()*5;
+    var dx = Math.random()*7;
+    var dy = Math.random()*7;
     ctx2.translate(dx, dy);  
     ctx2.fillStyle = '#F00';
     ctx2.beginPath();
